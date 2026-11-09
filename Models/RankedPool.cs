@@ -5,15 +5,17 @@ namespace ValoLineupViewer.Models
 {
     public static class RankedPool
     {
-        // Các map đang trong Bể map Xếp hạng (Active Competitive Pool) hiện tại của Valorant
-        // Lưu ý: Ascent và Split đã được Riot xoay tua đưa ra khỏi chế độ Xếp hạng
+        // 7 Map chuẩn trong Bể map Xếp hạng (Active Competitive Pool) hiện tại của Valorant:
+        // Abyss, Bind, Corrode, Haven, Lotus, Summit, Sunset
         public static readonly HashSet<string> ActiveRankedMaps = new(StringComparer.OrdinalIgnoreCase)
         {
             "Abyss",
-            "Sunset",
-            "Lotus",
             "Bind",
-            "Haven"
+            "Corrode",
+            "Haven",
+            "Lotus",
+            "Summit",
+            "Sunset"
         };
 
         public static bool IsRanked(string mapName)

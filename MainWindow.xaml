@@ -237,10 +237,12 @@
                             <ComboBox x:Name="CmbMap" Width="130" SelectionChanged="FilterChanged">
                                 <ComboBoxItem Content="Tất cả" IsSelected="True"/>
                                 <ComboBoxItem Content="Abyss" FontWeight="Bold" Foreground="#FFD700"/>
-                                <ComboBoxItem Content="Sunset" FontWeight="Bold" Foreground="#FFD700"/>
-                                <ComboBoxItem Content="Lotus" FontWeight="Bold" Foreground="#FFD700"/>
                                 <ComboBoxItem Content="Bind" FontWeight="Bold" Foreground="#FFD700"/>
+                                <ComboBoxItem Content="Corrode" FontWeight="Bold" Foreground="#FFD700"/>
                                 <ComboBoxItem Content="Haven" FontWeight="Bold" Foreground="#FFD700"/>
+                                <ComboBoxItem Content="Lotus" FontWeight="Bold" Foreground="#FFD700"/>
+                                <ComboBoxItem Content="Summit" FontWeight="Bold" Foreground="#FFD700"/>
+                                <ComboBoxItem Content="Sunset" FontWeight="Bold" Foreground="#FFD700"/>
                                 <ComboBoxItem Content="Ascent (Ngoài Rank)" Foreground="#6E7B8B"/>
                                 <ComboBoxItem Content="Split (Ngoài Rank)" Foreground="#6E7B8B"/>
                                 <ComboBoxItem Content="Icebox" Foreground="#6E7B8B"/>
