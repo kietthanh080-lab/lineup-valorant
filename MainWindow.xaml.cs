@@ -236,9 +236,36 @@ namespace ValoLineupViewer
 
             try
             {
+                Uri uri;
+                if (url.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || 
+                    url.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                {
+                    uri = new Uri(url);
+                }
+                else
+                {
+                    string localPath = System.IO.Path.IsPathRooted(url) ? url : System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, url);
+                    if (!System.IO.File.Exists(localPath))
+                    {
+                        string projPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..", url));
+                        if (System.IO.File.Exists(projPath))
+                            localPath = projPath;
+                    }
+
+                    if (!System.IO.File.Exists(localPath))
+                    {
+                        imgControl.Source = null;
+                        placeholder.Text = defaultText;
+                        placeholder.Visibility = Visibility.Visible;
+                        return;
+                    }
+
+                    uri = new Uri(localPath, UriKind.Absolute);
+                }
+
                 var bitmap = new BitmapImage();
                 bitmap.BeginInit();
-                bitmap.UriSource = new Uri(url, UriKind.RelativeOrAbsolute);
+                bitmap.UriSource = uri;
                 bitmap.CacheOption = BitmapCacheOption.OnLoad;
                 bitmap.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
                 bitmap.EndInit();

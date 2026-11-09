@@ -57,15 +57,94 @@
             <Setter Property="BorderBrush" Value="#FF4655"/>
         </Style>
 
-        <!-- Filter ComboBox Style -->
+        <!-- Custom Dark Gaming ComboBox Style -->
+        <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
+            <Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="22" />
+                    </Grid.ColumnDefinitions>
+                    <Path x:Name="Arrow" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 4 4 L 8 0 Z" Fill="#8A96A6"/>
+                </Grid>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="Border" Property="BorderBrush" Value="#00F0FF"/>
+                    <Setter TargetName="Arrow" Property="Fill" Value="#00F0FF"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
         <Style TargetType="ComboBox">
             <Setter Property="Background" Value="#161E28"/>
             <Setter Property="Foreground" Value="#ECE8E1"/>
             <Setter Property="BorderBrush" Value="#2B3648"/>
+            <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="Height" Value="34"/>
-            <Setter Property="Padding" Value="8,4"/>
             <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton Name="ToggleButton" 
+                                          Background="{TemplateBinding Background}" 
+                                          BorderBrush="{TemplateBinding BorderBrush}" 
+                                          BorderThickness="{TemplateBinding BorderThickness}"
+                                          Focusable="False" 
+                                          IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" 
+                                          ClickMode="Press"
+                                          Template="{StaticResource ComboBoxToggleButton}"/>
+                            <ContentPresenter Name="ContentSite" 
+                                              IsHitTestVisible="False" 
+                                              Content="{TemplateBinding SelectionBoxItem}" 
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" 
+                                              ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" 
+                                              Margin="10,0,24,0" 
+                                              VerticalAlignment="Center" 
+                                              HorizontalAlignment="Left" 
+                                              TextBlock.Foreground="#ECE8E1" 
+                                              TextBlock.FontWeight="SemiBold"/>
+                            <Popup Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
+                                <Grid Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="300">
+                                    <Border Name="DropDownBorder" Background="#121822" BorderBrush="#2A374A" BorderThickness="1" CornerRadius="4" Margin="0,2,0,0">
+                                        <ScrollViewer Margin="2" SnapsToDevicePixels="True">
+                                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                        </ScrollViewer>
+                                    </Border>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Foreground" Value="#ECE8E1"/>
+            <Setter Property="Background" Value="#121822"/>
+            <Setter Property="Padding" Value="10,7"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBoxItem">
+                        <Border x:Name="ItemBorder" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" CornerRadius="3" Margin="2,1">
+                            <ContentPresenter TextBlock.Foreground="{TemplateBinding Foreground}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="#253245"/>
+                                <Setter Property="Foreground" Value="#00F0FF"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="#2D1D28"/>
+                                <Setter Property="Foreground" Value="#FF4655"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </Window.Resources>
 
@@ -208,12 +287,29 @@
                             </ComboBox>
                         </StackPanel>
 
-                        <!-- Search Box -->
-                        <TextBox x:Name="TxtSearch" Grid.Column="5" Height="34" 
-                                 Background="#161E28" Foreground="#ECE8E1" 
-                                 BorderBrush="#2B3648" Padding="10,7" 
-                                 VerticalAlignment="Center" 
-                                 TextChanged="TxtSearch_TextChanged"/>
+                        <!-- Search Box with Placeholder -->
+                        <Grid Grid.Column="5" Height="34" VerticalAlignment="Center">
+                            <TextBox x:Name="TxtSearch" Height="34" 
+                                     Background="#161E28" Foreground="#ECE8E1" 
+                                     BorderBrush="#2B3648" Padding="10,7" 
+                                     VerticalAlignment="Center" 
+                                     TextChanged="TxtSearch_TextChanged"/>
+                            <TextBlock Text="🔍 Tìm kiếm vị trí, đặc vụ..." 
+                                       Foreground="#5B6675" FontSize="12"
+                                       IsHitTestVisible="False" Margin="10,0,0,0"
+                                       VerticalAlignment="Center">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Text, ElementName=TxtSearch}" Value="">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Grid>
                     </Grid>
                 </Border>
 
