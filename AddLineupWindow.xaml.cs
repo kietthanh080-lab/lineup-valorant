@@ -17,7 +17,7 @@ namespace ValoLineupViewer
         {
             if (string.IsNullOrWhiteSpace(TxtAddTitle.Text))
             {
-                MessageBox.Show("Vui lòng nhập tiêu đề cho Lineup!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                System.Windows.MessageBox.Show("Vui lòng nhập tiêu đề cho Lineup!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 

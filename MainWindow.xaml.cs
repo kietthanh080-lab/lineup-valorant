@@ -16,6 +16,7 @@ namespace ValoLineupViewer
     {
         private readonly LineupRepository _repository;
         private HotkeyManager? _hotkeyManager;
+        private TrayIconManager? _trayIconManager;
         private List<Lineup> _allLineups = new();
         private Lineup? _selectedLineup;
         private bool _isOverlayVisible = true;
@@ -36,6 +37,9 @@ namespace ValoLineupViewer
             _hotkeyManager.Initialize(hwnd);
             _hotkeyManager.OnToggleHotkeyPressed += ToggleOverlay;
 
+            // Khởi tạo icon dưới khay hệ thống (System Tray) + hiện thông báo sẵn sàng
+            _trayIconManager = new TrayIconManager(ToggleOverlay);
+
             // Nạp dữ liệu
             LoadData();
         }
@@ -43,6 +47,7 @@ namespace ValoLineupViewer
         protected override void OnClosed(EventArgs e)
         {
             _hotkeyManager?.Dispose();
+            _trayIconManager?.Dispose();
             base.OnClosed(e);
         }
 
@@ -60,7 +65,7 @@ namespace ValoLineupViewer
         private void ToggleOverlay()
         {
             // Nếu cửa sổ đang mở và người dùng đang gõ văn bản trong TextBox (như ô tìm kiếm), không đóng HUD khi bấm H
-            if (_isOverlayVisible && Keyboard.FocusedElement is TextBox)
+            if (_isOverlayVisible && Keyboard.FocusedElement is System.Windows.Controls.TextBox)
             {
                 return;
             }
@@ -193,7 +198,7 @@ namespace ValoLineupViewer
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Không thể mở video: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    System.Windows.MessageBox.Show($"Không thể mở video: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
@@ -219,7 +224,7 @@ namespace ValoLineupViewer
             BadgeRanked.Visibility = Visibility.Collapsed;
         }
 
-        private void LoadImageSafely(Image imgControl, TextBlock placeholder, string? url, string defaultText)
+        private void LoadImageSafely(System.Windows.Controls.Image imgControl, TextBlock placeholder, string? url, string defaultText)
         {
             if (string.IsNullOrWhiteSpace(url))
             {
@@ -249,7 +254,7 @@ namespace ValoLineupViewer
             }
         }
 
-        private void Window_KeyDown(object sender, KeyEventArgs e)
+        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == Key.Escape)
             {
